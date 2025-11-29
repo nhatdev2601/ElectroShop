@@ -25,25 +25,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Share categories với tất cả views để dùng trong header menu
-        View::composer('*', function ($view) {
+        // Share categories chỉ với layouts để dùng trong header menu
+        View::composer(['layouts.app', 'layouts.admin'], function ($view) {
             $headerCategories = Category::where('category_is_display', 1)
                 ->orderBy('category_id', 'asc')
                 ->limit(12)
                 ->get();
 
-            // Also share for product filters
-            $categories = Category::where('category_is_display', 1)
-                ->withCount([
-                    'products' => function ($query) {
-                        $query->where('product_is_display', 1);
-                    }
-                ])
-                ->orderBy('category_name', 'asc')
-                ->get();
-
-            $view->with('headerCategories', $headerCategories)
-                 ->with('categories', $categories);
+            $view->with('headerCategories', $headerCategories);
             
             // Share admin info for admin layout
             try {

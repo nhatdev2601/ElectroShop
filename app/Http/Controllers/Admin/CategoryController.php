@@ -17,12 +17,10 @@ class CategoryController extends Controller
         $query = Category::query();
 
         // Lọc theo trạng thái (0: ẩn, 1: hiển thị)
-        if ($request->filled('status')) {
+        if ($request->filled('status') && $request->status !== '') {
             $query->where('category_is_display', $request->status);
-        } else {
-            // Mặc định chỉ hiển thị danh mục đang hiển thị (status = 1)
-            $query->where('category_is_display', 1);
         }
+        // Nếu không có filter status, hiển thị tất cả
 
         // Tìm kiếm
         if ($request->filled('search')) {
